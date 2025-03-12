@@ -57,9 +57,10 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.2.1")
     implementation("androidx.media3:media3-common:1.2.1")
     
-    // Coil for image loading
-    implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("io.coil-kt:coil-video:2.7.0")
+    // Glide for image loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     
     // Lifecycle components
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")

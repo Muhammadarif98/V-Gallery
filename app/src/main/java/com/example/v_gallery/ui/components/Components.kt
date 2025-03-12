@@ -47,9 +47,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import com.example.v_gallery.model.Folder
 import com.example.v_gallery.model.Video
 import com.example.v_gallery.ui.theme.BrightOrange
@@ -61,6 +61,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Displays a video item in a grid
  */
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun VideoGridItem(
     video: Video,
@@ -81,12 +82,14 @@ fun VideoGridItem(
     ) {
         Box {
             // Thumbnail with loading indicator and error handling
-            SubcomposeAsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(video.thumbnailUri)
-                    .crossfade(true)
-                    .build(),
-                loading = {
+            GlideImage(
+                model = video.thumbnailUri,
+                contentDescription = "Video thumbnail",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f),
+                contentScale = ContentScale.Crop,
+                loading = placeholder {
                     Box(contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(30.dp),
@@ -94,7 +97,7 @@ fun VideoGridItem(
                         )
                     }
                 },
-                error = {
+                failure = placeholder {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -109,12 +112,7 @@ fun VideoGridItem(
                             modifier = Modifier.size(40.dp)
                         )
                     }
-                },
-                contentDescription = "Video thumbnail",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
+                }
             )
             
             // Duration overlay
@@ -169,6 +167,7 @@ fun VideoGridItem(
 /**
  * Displays a folder item in a grid
  */
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun FolderGridItem(
     folder: Folder,
@@ -190,12 +189,14 @@ fun FolderGridItem(
         Column {
             Box {
                 // Folder thumbnail with error handling
-                SubcomposeAsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(folder.thumbnailUri)
-                        .crossfade(true)
-                        .build(),
-                    loading = {
+                GlideImage(
+                    model = folder.thumbnailUri,
+                    contentDescription = "Folder thumbnail",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                    contentScale = ContentScale.Crop,
+                    loading = placeholder {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -209,19 +210,14 @@ fun FolderGridItem(
                             )
                         }
                     },
-                    error = {
+                    failure = placeholder {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .aspectRatio(1f)
                                 .background(Color.DarkGray)
                         )
-                    },
-                    contentDescription = "Folder thumbnail",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
+                    }
                 )
                 
                 // Gradient overlay
